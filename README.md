@@ -6,4 +6,5 @@ historical checkouts keep reproducible site inputs without carrying binary histo
 the main repository.
 
 The images under `examples/` are generated and published by Leaf's
-`wt refresh-previews` command. Do not edit them by hand.
+`wt refresh-previews` command, and those under `demo/` by `leaf-dev record-demo`.
+Do not edit them by hand.
