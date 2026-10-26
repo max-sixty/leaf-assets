@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Support console</title>
+    <link rel="stylesheet" href="console.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <span class="brand">Helpdesk</span>
+      <nav class="sections">
+        <a class="section current" href="#">Inbox<span class="news-dot" aria-label="unread"></span></a>
+        <a class="section" href="#">Reports</a>
+        <a class="section" href="#">Settings</a>
+      </nav>
+      <span class="status-line">3 new replies in 2 threads</span>
+      <span class="avatar">MR</span>
+    </header>
+    <div class="workspace">
+      <aside class="queue">
+        <div class="queue-tabs" role="tablist">
+          <button class="queue-tab current" role="tab">Mine <span class="count">2</span></button>
+          <button class="queue-tab" role="tab">Bot <span class="count">0</span></button>
+          <button class="queue-tab" role="tab">All <span class="count">5</span></button>
+        </div>
+        <ol class="cards">
+          <li class="card current">
+            <p class="card-place"><span class="card-kind">Question ·</span> Billing</p>
+            <p class="card-title">Refund the double charge on invoice 4471?</p>
+            <div class="card-actions"><button>Approve refund</button><button>Decline</button></div>
+          </li>
+          <li class="card">
+            <p class="card-place"><span class="card-kind">Question ·</span> Accounts</p>
+            <p class="card-title">Merge Dana Ruiz's two accounts?</p>
+            <div class="card-actions"><button>Merge</button><button>Keep both</button></div>
+          </li>
+          <li class="card">
+            <p class="card-place"><span class="card-kind">To-do ·</span> Shipping</p>
+            <p class="card-title">Call the courier about order 9012</p>
+            <div class="card-actions"><button>Done</button></div>
+          </li>
+        </ol>
+      </aside>
+      <main class="thread">
+        <h1 class="thread-title">Double charge on invoice 4471</h1>
+        <ol class="messages">
+          <li class="message">
+            <p class="meta"><span class="author">Dana Ruiz</span> <span class="age">4m ago</span></p>
+            <p>I was charged twice for March. Both charges show on my card statement.</p>
+          </li>
+          <li class="message">
+            <p class="meta"><span class="author">Dana Ruiz</span> <span class="age">4m ago</span></p>
+            <p>Invoice 4471, if that helps.</p>
+          </li>
+          <li class="message">
+            <p class="meta"><span class="author">Triage bot</span> <span class="age">4m ago</span></p>
+            <p>Found two captures of $48.00 on 3 March, 11 seconds apart. Likely a retried payment.</p>
+          </li>
+          <li class="message mine">
+            <p class="meta"><span class="author">You</span> <span class="age">1m ago</span></p>
+            <p>Thanks Dana, checking with billing now.</p>
+          </li>
+        </ol>
+        <form class="composer"><textarea placeholder="Reply to Dana…"></textarea><button>Send</button></form>
+      </main>
+    </div>
+  </body>
+</html>

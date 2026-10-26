@@ -1,0 +1,46 @@
+[
+  {
+    "id": "status-line-reply-count",
+    "title": "Status line counting new replies",
+    "where": "Top bar, right side, on every screen while any reply is unread",
+    "shows": "\"3 new replies in 2 threads\"",
+    "why_cut": "The Inbox tab's blue dot already says there is unread news, and each thread in the list carries its own unread mark, so the line restates what two surfaces show.",
+    "cost": "The exact count at a glance; the top bar's right side would hold only the avatar.",
+    "capture": "evals/audit-calls-are-proposals/audit/captures/status-line-reply-count.png",
+    "owner": "app/index.html (.status-line)",
+    "confidence": "judgment call"
+  },
+  {
+    "id": "empty-bot-tab",
+    "title": "Bot tab when nothing waits on the bot",
+    "where": "Queue tabs above the card list",
+    "shows": "\"Bot 0\" between Mine and All",
+    "why_cut": "A tab that opens an empty list offers nothing; the bot's work shows up in All when it exists.",
+    "cost": "The tabs would change between days, moving All under the pointer when the bot gets work; agents lose the explicit 'nothing on the bot' confirmation.",
+    "capture": "evals/audit-calls-are-proposals/audit/captures/empty-bot-tab.png",
+    "owner": "app/index.html (.queue-tab)",
+    "confidence": "judgment call"
+  },
+  {
+    "id": "card-kind-word",
+    "title": "Kind word over each card",
+    "where": "Every card in the queue",
+    "shows": "\"Question ·\" or \"To-do ·\" before the card's area",
+    "why_cut": "The card's title and its buttons already say what it is: a question has answer buttons, a to-do has Done.",
+    "cost": "In a mixed list, a word telling questions from to-dos before reading the title; it repeats on every card in a list of one kind.",
+    "capture": "evals/audit-calls-are-proposals/audit/captures/card-kind-word.png",
+    "owner": "app/index.html (.card-kind)",
+    "confidence": "judgment call"
+  },
+  {
+    "id": "age-on-every-message",
+    "title": "Age on every message",
+    "where": "Thread view, each message's header",
+    "shows": "\"4m ago\" on three consecutive messages",
+    "why_cut": "Consecutive messages of the same age repeat it; only a change in age tells the reader anything.",
+    "cost": "Scanning to one message no longer gives its age without looking up; a quieter option is showing an age only where it differs from the message above.",
+    "capture": "evals/audit-calls-are-proposals/audit/captures/age-on-every-message.png",
+    "owner": "app/index.html (.age)",
+    "confidence": "judgment call"
+  }
+]
