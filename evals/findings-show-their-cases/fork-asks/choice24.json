@@ -1,0 +1,170 @@
+[
+ {
+  "page": "fork-messages",
+  "event": "8d23a17a",
+  "posted": "2026-11-19T21:45:07.265-08:00",
+  "title": "Merging the reworked PR #6574",
+  "text": "Should I merge [PR #6574](https://github.com/max-sixty/leaf/pull/6574) once its rework passes its eval and journey? The rework deletes Leaf's heavy fork and has the main session judge every thread message: it answers the message itself, starts a fork, or sends it to the thread's existing fork. The light fork then only writes the working line.\n\nI'll put the rework's eval scores, journey run and review in [the merge decision](#merge-6574-q) when they're in, with my advice.\n\n<lf-options id=\"pr6574-rework-merge\">\n<lf-option id=\"pr6574-rework-merge-yes\" label=\"Merge once it passes\"><strong>Merge once it passes</strong> I squash-merge it after its eval and journey pass. I then narrow backlog #6547, running Leaf's forks in Codex and Pi, to the line fork, the summary fork and the turn-end check.</lf-option>\n<lf-option id=\"pr6574-rework-merge-hold\" label=\"Hold PR #6574\"><strong>Hold PR #6574</strong> Leaf keeps spawning the heavy fork itself.</lf-option>\n</lf-options>"
+ },
+ {
+  "page": "card-rewritten-quote",
+  "event": "3bf598fd",
+  "posted": "2026-11-19T20:15:56.405-08:00",
+  "title": "Merging PR #6573",
+  "text": "[PR #6573](https://github.com/max-sixty/leaf/pull/6573) keeps a comment on the item its words stand in and quotes rewritten words at the top of a margin card. It has passed CI, and the automated review approved it with no comments.\n\nShall I merge it? Whichever you pick, #1, when deliveries carry `rewritten_from`, stays a separate question.\n\n<lf-options id=\"merge-6573\">\n<lf-option id=\"merge-6573-now\" label=\"Merge it\"><strong>Merge it</strong> Squash-merges to main. Installed sessions pick it up on their next marketplace sweep.</lf-option>\n<lf-option id=\"merge-6573-hold\" label=\"Hold off\"><strong>Hold off</strong> The PR stays open for you to try or comment on first.</lf-option>\n</lf-options>"
+ },
+ {
+  "page": "compact-when-done-release",
+  "event": "124ae524",
+  "posted": "2026-11-19T20:08:12.292-08:00",
+  "title": "Fixing the plugin load errors in the dotfiles marketplace",
+  "text": "The three errors /reload-plugins reported come from the mblode plugin, not Leaf, which loaded fine. Its entry in the dotfiles marketplace (`~/.claude/plugins/marketplaces/dotfiles/.claude-plugin/marketplace.json`) still lists three skills that its upstream repository no longer has: `ui-animation`, `product-design` and `ui-verification`. Each plugin reload reports them again until they're removed.\n\nShould I remove those three lines from the dotfiles marketplace and push the change?\n\n<lf-options id=\"mblode-marketplace-fix\">\n<lf-option id=\"mblode-marketplace-fix-remove\" label=\"Remove the three entries\"><strong>Remove the three entries</strong> The mblode plugin then loads with its one remaining skill, ui-design, and reloads stop reporting errors. The change lands on the dotfiles repository's main.</lf-option>\n<lf-option id=\"mblode-marketplace-fix-leave\" label=\"Leave them\"><strong>Leave them</strong> Every reload keeps reporting the three errors, and the mblode plugin stays unloaded.</lf-option>\n</lf-options>"
+ },
+ {
+  "page": "fork-eval-composed-requests",
+  "event": "8e89bef6",
+  "posted": "2026-11-19T20:03:36.302-08:00",
+  "title": "Landing the capture script fix in Mackup",
+  "text": "The request-capture preload, `capture-requests.js` in your `analyzing-claude-behavior` skill, let one of the SDK's log lines onto a `claude -p` session's stdout, which broke stream-json parsing. The fixed filter is committed on `capture-requests-log-filter` in `~/Mackup.capture-requests-log-filter`, and a live run shows no log line leaks after it. Mackup lands changes with `wt merge`.\n\nShall I land it?\n\n<lf-options id=\"capture-fix-land\">\n<lf-option id=\"capture-fix-land-merge\" label=\"Land the capture fix\" recommended><strong>Land the capture fix</strong> Runs `wt merge` in that worktree, which deploys it to `~/.claude`.</lf-option>\n<lf-option id=\"capture-fix-land-hold\" label=\"Keep the fix on its branch\"><strong>Keep the fix on its branch</strong> The live script keeps leaking the line until it lands.</lf-option>\n</lf-options>"
+ },
+ {
+  "page": "fork-eval-composed-requests",
+  "event": "60dc97a0",
+  "posted": "2026-11-19T20:03:36.299-08:00",
+  "title": "Merging the fork eval header correction",
+  "text": "[#6570](https://github.com/max-sixty/leaf/pull/6570) corrects the module header of `dev/leaf_dev/fork_eval.py`: it now names the headless prefix the replay sends, and says why the replay resumes a transcript rather than sending one composed message. It changes only the docstring. CI is green and leaf-agent approved it.\n\nShall I merge it?\n\n<lf-options id=\"merge-6570\">\n<lf-option id=\"merge-6570-merge\" label=\"Merge #6570\" recommended><strong>Merge #6570</strong> Squash-merges it to main.</lf-option>\n<lf-option id=\"merge-6570-hold\" label=\"Hold #6570 open\"><strong>Hold #6570 open</strong> It stays open for you to read first.</lf-option>\n</lf-options>"
+ },
+ {
+  "page": "gh-needs-me",
+  "event": "e3d07595",
+  "posted": "2026-11-19T18:45:04.805-08:00",
+  "title": "Chrome 159 drops the comment box for a frame (#6539)",
+  "text": "[#6539](https://github.com/max-sixty/leaf/issues/6539): since #6530 moved the tests to Playwright 1.65.2, which brings Chrome 159, two cases of the wheel-return test fail on `main`. When you wheel away from a passage and back, the comment box is missing from the first frame that shows the passage again. It's there one frame later, about 16 ms.\n\nThe tend bot reproduced it on a plain HTML page with no Leaf code: a fixed box placed by CSS anchoring drops that frame in Chrome 159 and not in 158. No Leaf script runs at that moment, so Leaf has nothing to fix. It's still unknown whether the Chrome users run drops the frame too, since the bot could only test headless.\n\nHow should the two failing cases be handled? I'd mark them as expected failures and report the bug to Chromium.\n\n<lf-options id=\"chrome159-frame\">\n<lf-option id=\"chrome159-xfail\" label=\"Mark them as expected failures on Chrome 159\" recommended><strong>Mark them as expected failures on Chrome 159</strong> `xfail(strict=True)` on headless shell builds 1255 and later, linked to the Chromium bug. CI goes green. The cases turn red again once Chrome ships a fix, which tells us to remove the mark. Someone with a crbug.com account files the bug, since the bot can't.</lf-option>\n<lf-option id=\"chrome159-red\" label=\"Keep the test red until Chromium fixes it\"><strong>Keep the test red until Chromium fixes it</strong> The bug gets reported upstream, and every main run fails these two cases until then.</lf-option>\n<lf-option id=\"chrome159-pin\" label=\"Pin Playwright back to 1.65.0\"><strong>Pin Playwright back to 1.65.0</strong> CI goes green on Chrome 158. Every test stays on the old Chrome, and the next Playwright bump brings the failure back.</lf-option>\n</lf-options>"
+ },
+ {
+  "page": "workspace-page-scroll",
+  "event": "b3618797",
+  "posted": "2026-11-19T16:52:13.608-08:00",
+  "title": "Merging #6555",
+  "text": "[#6555](https://github.com/max-sixty/leaf/pull/6555) is ready to land: CI is green and leaf-agent approved it. It squash-merges to `main`, and installed sessions pick it up from there.\n\nShall I merge it?\n\n<lf-options id=\"merge-6555\">\n<lf-option id=\"merge-6555-go\" label=\"Merge it\" recommended><strong>Merge it</strong> I squash-merge #6555. From then on, a workspace page holds still whatever an extension adds to the body.</lf-option>\n<lf-option id=\"merge-6555-hold\" label=\"Hold off\"><strong>Hold off</strong> The PR stays open, and the 72px scroll stays until it lands.</lf-option>\n</lf-options>"
+ },
+ {
+  "page": "draft-dot-page-dir",
+  "event": "e82c7594",
+  "posted": "2026-11-19T13:07:09.770-08:00",
+  "title": "Letting running containers keep their image through a deploy",
+  "text": "Once Durable Object scheduling is in, shall I stop restarting running containers at a deploy? A visitor would keep their server until it sleeps after 10 idle minutes, and the next start would be on the new image. That is how a local Leaf server behaves when the plugin updates.\n\nAn agent turn in progress would finish on the image it started on, so the restart-on-deploy design for cut-off replies isn't needed. The tab would follow its own server's runtime rather than the edge's release, which deletes the stop-at-deploy and the browser's release check. Someone who keeps working stays on the old image until they pause.\n\nIt needs a dev check first: that a page from the previous image still loads its runtime files after the edge moves on.\n\n<lf-options id=\"ride-through-go\">\n<lf-option id=\"ride-through-go-yes\" label=\"Do it after Durable Object scheduling\" recommended><strong>Do it after Durable Object scheduling</strong> Fewer mechanisms, and cut-off turns become rare.</lf-option>\n<lf-option id=\"ride-through-go-no\" label=\"Keep stopping containers at a deploy\"><strong>Keep stopping containers at a deploy</strong> A turn in progress at a deploy is still cut off.</lf-option>\n</lf-options>"
+ },
+ {
+  "page": "draft-dot-page-dir",
+  "event": "d6cd64f5",
+  "posted": "2026-11-19T13:07:09.756-08:00",
+  "title": null,
+  "text": "Shall I move leaf.page's containers to Cloudflare's `durable_object` scheduling? Every production deploy today was followed by 2–5 minutes in which every container start failed with \"Failed to start container\". That happens because the Worker switches at once while the container image rolls out over minutes.\n\nUnder the new policy, the session object picks the image each time it starts a container, so a new start always runs the current release. The window ends, and the store's release check goes. Cloudflare also reports starts about 6× faster. The `default` policy we use is now deprecated, and the replacement is in public beta.\n\nCost: a new container application, which resets every visitor's records once. I'd build it, trial it on dev, then ship it.\n\n<lf-options id=\"do-scheduling-go\">\n<lf-option id=\"do-scheduling-go-yes\" label=\"Build it, trial on dev, then ship\" recommended><strong>Build it, trial on dev, then ship</strong> Ends the failure window. Every visitor's records reset once.</lf-option>\n<lf-option id=\"do-scheduling-go-hold\" label=\"Hold off\"><strong>Hold off</strong> Each deploy keeps a 2–5 minute window of failed starts.</lf-option>\n</lf-options>"
+ },
+ {
+  "page": "fork-roadmap",
+  "event": "c56a44b5",
+  "posted": "2026-11-19T12:55:06.744-08:00",
+  "title": "Deleting the receipts test-build worktree",
+  "text": "Should I delete the #48 receipts test build? It lives in the worktree ~/workspace/leaf.agent-a4a215462236526c6, which holds one unpushed commit, 909f9686d1.\n\nI built it only to measure the change, and those numbers are on this page and on fork-messages. A real build would start again from main, because the branch is 59 commits behind and conflicts with main in `forks.py` and `service.py`. I'd delete it whichever way you decide #48.\n\n<lf-options id=\"receipts-prototype-worktree\">\n<lf-option id=\"receipts-prototype-worktree-remove\" label=\"Delete the worktree and its branch\" recommended><strong>Delete the worktree and its branch</strong> The measurements stay on both pages. A Build would start fresh from main.</lf-option>\n<lf-option id=\"receipts-prototype-worktree-keep\" label=\"Keep it until #48 is decided\"><strong>Keep it until #48 is decided</strong> It stays as a reference, falling further behind main each day.</lf-option>\n</lf-options>"
+ },
+ {
+  "page": "work-in-hand",
+  "event": "1a60cd04",
+  "posted": "2026-11-19T11:22:23.206-08:00",
+  "title": "Merging #6538",
+  "text": "[#6538](https://github.com/max-sixty/leaf/pull/6538) is ready to land: CI is green and leaf-agent approved it. It makes progress posted on a to-do's reference start the to-do, has workers post their steps there, and has a promise's header read On it while its work runs. It lands without waiting on the two choices above.\n\nShall I merge it?\n\n<lf-options id=\"merge-6538\">\n<lf-option id=\"merge-6538-hold\" label=\"Hold #6538 open\"><strong>Hold #6538 open</strong></lf-option>\n<lf-option id=\"merge-6538-merge\" label=\"Merge #6538\"><strong>Merge #6538</strong> Squash-merges it to main.</lf-option>\n</lf-options>"
+ },
+ {
+  "page": "compact-when-done-release",
+  "event": "be083ef9",
+  "posted": "2026-11-19T09:46:49.804-08:00",
+  "title": "Wording of How it decides' model sentence",
+  "text": "Which wording should How it decides use for the sentence about which model answers the question? The plain description is in the README now. I'd keep it, because What it saves already gives what a question costs.\n\n<lf-options id=\"hid-model-sentence-pick\">\n<lf-option id=\"hid-model-sentence-pick-plain\" label=\"Plain description\" recommended><strong>Plain description</strong> “The question goes to the session's own model, which reads the whole transcript from the prompt cache.”</lf-option>\n<lf-option id=\"hid-model-sentence-pick-cost\" label=\"With the cost\"><strong>With the cost</strong> “The session's own model answers it, reading the whole transcript from the prompt cache at about 11 cents a question.”</lf-option>\n<lf-option id=\"hid-model-sentence-pick-contrast\" label=\"With the alternative\"><strong>With the alternative</strong> “The session's own model answers it over the whole transcript, rather than a small model over the last reply. It reads the transcript from the prompt cache, at about 11 cents a question.”</lf-option>\n</lf-options>"
+ },
+ {
+  "page": "compact-when-done-release",
+  "event": "20b90cf1",
+  "posted": "2026-11-19T09:30:32.727-08:00",
+  "title": "Wording of the classifier charts' accuracy axis",
+  "text": "The classifier charts now say \"accuracy\", as you asked, and the axis gives the measure: \"Accuracy (% of a perfect classifier's information)\". The table beside them uses \"accuracy\" in its everyday sense, as in \"right 9 times in 10\". A classifier right 9 times in 10 sits at about 50% on the axis, so the same word shows two different numbers.\n\nShould the axis keep \"accuracy\"? I'd keep it, since the axis label names the measure.\n\n<lf-options id=\"voi-axis-word\">\n<lf-option id=\"voi-axis-word-keep\" label=\"Keep “accuracy”\" recommended><strong>Keep “accuracy”</strong> The caption stays as you asked, and the axis label still names the measure.</lf-option>\n<lf-option id=\"voi-axis-word-information\" label=\"Say “information”\"><strong>Say “information”</strong> The captions and axes read “against its share of a perfect classifier's information”. That is longer, but the word no longer clashes with “right 9 times in 10”.</lf-option>\n</lf-options>"
+ },
+ {
+  "page": "fork-messages",
+  "event": "6570fd60",
+  "posted": "2026-11-19T00:03:48.687-08:00",
+  "title": "Merging PR #6502",
+  "text": "Should I merge [#6502](https://github.com/max-sixty/leaf/pull/6502) once #6477 lands?\n\nThe turn-end check often writes an ask with its question in the same paragraph as the status and advice around it. That happened in 9 of the 29 asks it posted on real pages on 17–18 Nov. #6502 adds one sentence to the ask's `text` field in `turn-end-check.md`: the question stands in a paragraph of its own. On the two cases the judge failed for this, the change scored 16/16 against 15/24 before. The other ask cases scored 20/21 against 21/21.\n\nThe rule is now stated in two places, here and in `threads.md`. Leaf's review bot is holding its verdict until you decide whether that's acceptable. Merging changes the prompt that every turn-end check reads. CI passes. #6502 is stacked on #6477 and moves to `main` once #6477 lands.\n\n<lf-options id=\"merge-6502\">\n<lf-option id=\"merge-6502-go\" label=\"Merge #6502\"><strong>Merge #6502</strong> I squash-merge it after #6477, and turn-end asks give their question a paragraph of its own.</lf-option>\n<lf-option id=\"merge-6502-hold\" label=\"Hold it\"><strong>Hold it</strong> It stays open for you to read, and the turn-end check keeps writing asks as it does now.</lf-option>\n</lf-options>"
+ },
+ {
+  "page": "gh-needs-me",
+  "event": "a277c981",
+  "posted": "2026-11-18T23:20:10.165-08:00",
+  "title": "Linux runs for #6434's flake input",
+  "text": "#6434's `flake` input only runs chosen tests on CI's macOS machine. That machine is the one no session or Tend run can reach. Linux is covered already: Tend's runs use the same `ubuntu-24.04` machine as the `test` job, so they can rerun a Linux-only failure themselves.\n\nI'd keep it macOS-only until a Linux-only failure needs CI's runner. Covering Linux would add a small job to the `ci` workflow before you merge #6434.\n\n<lf-options id=\"flake-linux\">\n<lf-option id=\"flake-linux-keep\" label=\"Keep it macOS-only\" recommended><strong>Keep it macOS-only</strong> #6434 merges as it is</lf-option>\n<lf-option id=\"flake-linux-add\" label=\"Add a Linux job before merging\"><strong>Add a Linux job before merging</strong> One more job in the `ci` workflow</lf-option>\n</lf-options>"
+ },
+ {
+  "page": "draft-dot-page-dir",
+  "event": "0146706b",
+  "posted": "2026-11-18T23:10:02.176-08:00",
+  "title": "Trying the carry across a real deploy on dev",
+  "text": "Shall I try [#6484](https://github.com/max-sixty/leaf/pull/6484) across a real deploy before it merges? I'd deploy `main` to the `leaf-website-dev` environment, comment on a page, deploy #6484 there, and check that the comment survives. Tests cover a page restored under a new release, but nothing else exercises Cloudflare's real container handover at a deploy. It means two deploys to the dev environment, which leaf.page's visitors never reach.\n\n<lf-options id=\"dev-carry-trial\">\n<lf-option id=\"dev-carry-trial-go\" label=\"Deploy to dev and check\"><strong>Deploy to dev and check</strong> Two deploys to <code>leaf-website-dev</code>, then a report here.</lf-option>\n<lf-option id=\"dev-carry-trial-skip\" label=\"Skip the dev trial\"><strong>Skip the dev trial</strong> The first real test is the next production deploy after #6484 lands.</lf-option>\n</lf-options>"
+ },
+ {
+  "page": "fork-messages",
+  "event": "777a43e6",
+  "posted": "2026-11-18T22:55:13.381-08:00",
+  "title": "How a fork hands a thread back",
+  "text": "Should a fork that gives a thread back say so in JSON, as you suggested, or with no marker at all? [#6488](https://github.com/max-sixty/leaf/pull/6488) takes the second route.\n\nLeaf already reads the hand-back from the page's log: a message the fork's turn picked up is still unanswered. So in #6488 the fork leaves the message unanswered and ends with one line saying why, and Leaf quotes that line to the main session as the fork's last words. A JSON answer would have the fork format a reason Leaf only passes on, and it would be a second answer that could disagree with the log. Its CI is still running.\n\n<lf-options id=\"hand-back-form\">\n<lf-option id=\"hand-back-form-drop\" label=\"Drop the marker\" recommended><strong>Drop the marker</strong> I merge #6488 once its CI passes.</lf-option>\n<lf-option id=\"hand-back-form-json\" label=\"Use JSON instead\"><strong>Use JSON instead</strong> I rework #6488 so the fork ends with a JSON reason, which Leaf parses beside what the log already says.</lf-option>\n</lf-options>"
+ },
+ {
+  "page": "fork-messages",
+  "event": "7767205c",
+  "posted": "2026-11-18T22:46:07.880-08:00",
+  "title": "Merging PR #6477",
+  "text": "Should I merge [#6477](https://github.com/max-sixty/leaf/pull/6477)? Its CI has passed. It fixes the two causes this page describes. The line fork's rule now counts reading the page's source as work a fork can take. The eval now replays a fork with Leaf's prompt last, as a live fork sends it. It also reorders the line fork's prompt as goal, constraints, context, then the answer format, which scored 44/45 against 43/45 before. Merging changes the prompt every Claude Code session's line fork reads. Until it lands, the docs' new anatomy section shows the old prompt wording.\n\n<lf-options id=\"merge-6477\">\n<lf-option id=\"merge-6477-go\" label=\"Merge #6477\" recommended><strong>Merge #6477</strong> I squash-merge it, and the docs pick up the new prompt.</lf-option>\n<lf-option id=\"merge-6477-hold\" label=\"Hold it\"><strong>Hold it</strong> It stays open for you to read or merge yourself.</lf-option>\n</lf-options>"
+ },
+ {
+  "page": "fork-messages",
+  "event": "465fc747",
+  "posted": "2026-11-18T22:27:22.859-08:00",
+  "title": "Reporting Claude Code's resumed-fork wording",
+  "text": "Should I draft a report to Claude Code about the words it wraps around a message to a resumed fork? Claude Code tells the fork the message came \"while you were working\" and to address it \"before completing your current task\", even when the fork's run has already ended. Leaf's own text straight after it corrects that, and in the 19:38 run the fork answered normally. So today it costs one misleading line in every resumed fork's context. You'd read the draft before anything is filed.\n\n<lf-options id=\"cc-wrapper-report\">\n<lf-option id=\"cc-wrapper-report-draft\" label=\"Draft a report\" recommended><strong>Draft a report</strong> I write it up with the recorded message, and you decide whether to file it.</lf-option>\n<lf-option id=\"cc-wrapper-report-skip\" label=\"Leave it\"><strong>Leave it</strong> The wording stays, and Leaf's text goes on correcting it.</lf-option>\n</lf-options>"
+ },
+ {
+  "page": "panel-status-whole",
+  "event": "3402d5d0",
+  "posted": "2026-11-18T21:40:51.928-08:00",
+  "title": "Merging PR #6478",
+  "text": "[PR #6478](https://github.com/max-sixty/leaf/pull/6478) is ready to merge. CI passed, and Leaf's automated review approved it. Merging squashes it onto `main`, and installs that follow `main` then get the preview: a mouse resting on the panel's field, or a finger holding it, shows a status the field cuts short in full. Holding off leaves it unmerged for more changes.\n\n<lf-options id=\"merge-6478\">\n<lf-option id=\"merge-6478-go\" label=\"Merge it\"><strong>Merge it</strong> I'll merge the PR.</lf-option>\n<lf-option id=\"merge-6478-hold\" label=\"Hold off\"><strong>Hold off</strong> It stays open for changes.</lf-option>\n</lf-options>"
+ },
+ {
+  "page": "key-reading",
+  "event": "4d7844d2",
+  "posted": "2026-11-18T19:11:51.201-08:00",
+  "title": "Merging PR #5966, which moves Leaf's key reading to <html>",
+  "text": "[#5966](https://github.com/max-sixty/leaf/pull/5966) is ready to merge. It is merged with today's main, CI passed, the leaf-agent reviewer approved this head with no findings, and GitHub reports no conflicts. It moves Leaf's reading of keys other than printed letters to one listener on `<html>`, and only Escape's let-go waits for the window ([the decision](#verdict)).\n\nThe change for page authors: a `document` or `window` listener no longer hears a key that Leaf has a command for where the user is.\n\nShall I merge it?\n\n<lf-options id=\"merge-5966\">\n<lf-option id=\"merge-5966-now\" label=\"Merge #5966\" recommended><strong>Merge #5966</strong> I squash-merge it and sync the worktree.</lf-option>\n<lf-option id=\"merge-5966-hold\" label=\"Hold the merge\"><strong>Hold the merge</strong> It stays open as it is.</lf-option>\n</lf-options>"
+ },
+ {
+  "page": "draft-dot-page-dir",
+  "event": "a183732d",
+  "posted": "2026-11-18T18:44:03.475-08:00",
+  "title": "Merging the leaf.page release-check fix (PR #6457)",
+  "text": "Shall I merge [PR #6457](https://github.com/max-sixty/leaf/pull/6457)?\n\nIt fixes the \"Hit a problem — trying again\" error you saw after resolving a thread on leaf.page. While a deploy rolls out, a container can still be running the old release. The page store now refuses any request from a container on another release up front, rather than checking the release on each operation. Its CI is green and leaf-agent approved it.\n\nI'd merge it now. If the Durable Object scheduling trial goes ahead and works, most of this release check gets deleted later.\n\n<lf-options id=\"merge-6457\">\n<lf-option id=\"merge-6457-go\" label=\"Merge it\" recommended><strong>Merge it</strong></lf-option>\n<lf-option id=\"merge-6457-hold\" label=\"Hold off\"><strong>Hold off</strong> The PR stays open, and the error can recur during a deploy.</lf-option>\n</lf-options>"
+ },
+ {
+  "page": "draft-dot-page-dir",
+  "event": "2b6691bc",
+  "posted": "2026-11-18T18:44:03.470-08:00",
+  "title": "Merging the lighter draft dot (PR #6464)",
+  "text": "Shall I merge [PR #6464](https://github.com/max-sixty/leaf/pull/6464)?\n\nIt draws the dot for a draft you put away in a lighter grey, `--lf-draft`, so it no longer looks like the navy news dot. Its tests pass and leaf-agent approved it with no comments.\n\nMerging squash-lands it on `main`. Holding off leaves the dot as dark as the tray symbol.\n\n<lf-options id=\"merge-6464\">\n<lf-option id=\"merge-6464-go\" label=\"Merge it\" recommended><strong>Merge it</strong></lf-option>\n<lf-option id=\"merge-6464-hold\" label=\"Hold off\"><strong>Hold off</strong> The PR stays open.</lf-option>\n</lf-options>"
+ },
+ {
+  "page": "draft-dot-page-dir",
+  "event": "8a3829c9",
+  "posted": "2026-11-18T18:27:43.179-08:00",
+  "title": "Trying Durable Object scheduling for leaf.page containers",
+  "text": "Can I deploy a trial of Cloudflare's `scheduling_policy = \"durable_object\"` to leaf.page's dev application?\n\nToday a deploy switches the Worker and its Durable Object code at once, but container images roll over minutes later. That gap is why leaf.page stamps `Leaf-Release` on answers, swaps in the published page (`rollingOut`) and has the page store refuse another release ([PR #6457](https://github.com/max-sixty/leaf/pull/6457)).\n\nWith the new policy, each Durable Object starts the image of its own Worker version, so the gap can't happen. The Durable Object would only replace a container left running from before the deploy, and it already holds the page record, so nothing is lost. That would let us delete the release stamp, `rollingOut`, the store's release check and the \"still starting\" 503s, and close the old-sample-link gap.\n\nThe cost is a trial deploy to the dev application to check that `@cloudflare/containers` 0.3.7 lets the Durable Object pick the image, and what switching an existing application's policy does to visitors with open sessions. I recommend trying it.\n\n<lf-options id=\"do-scheduling-trial\">\n<lf-option id=\"do-scheduling-trial-go\" label=\"Deploy a trial to dev\" recommended><strong>Deploy a trial to dev</strong> I switch the dev application's policy, test a deploy, and report back before touching production.</lf-option>\n<lf-option id=\"do-scheduling-trial-hold\" label=\"Keep the release check\"><strong>Keep the release check</strong> PR #6457 stays the fix. The old-sample-link gap stays open.</lf-option>\n</lf-options>"
+ }
+]

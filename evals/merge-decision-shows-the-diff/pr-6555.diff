@@ -1,0 +1,127 @@
+diff --git a/browser/base.css b/browser/base.css
+index 2f2f0a5f81..ce52a50210 100644
+--- a/browser/base.css
++++ b/browser/base.css
+@@ -376,12 +376,12 @@ @media screen {
+       scroll-padding: calc(0 * var(--lf-landing-top)) !important;
+     }
+     /* The foot's room is the body's own end, where content growing above it only
+      * lengthens the body: a box standing after the content would move with each growth.
+-     * A page of parts makes it the open part's end instead (layouts.css). The head's
+-     * room is the body's own start the same way, padding rather than a box, so a page
+-     * that lays its body out as a grid or flex row of header, nav and main finds no
+-     * item of Leaf's among its own. */
++     * A page of parts makes it the open part's end instead, and a workspace its regions'
++     * ends (layouts.css). The head's room is the body's own start the same way, padding
++     * rather than a box, so a page that lays its body out as a grid or flex row of
++     * header, nav and main finds no item of Leaf's among its own. */
+     body {
+       padding-top: var(--lf-head-room);
+       padding-bottom: var(--lf-foot-room);
+     }
+diff --git a/browser/layouts.css b/browser/layouts.css
+index d3b9130338..5ef0afa67a 100644
+--- a/browser/layouts.css
++++ b/browser/layouts.css
+@@ -951,29 +951,20 @@ @layer lf-layouts {
+     padding-block: var(--lf-sp-2) var(--lf-page-pad-end);
+   }
+   /* The root workspace reaches the window's foot. Its last reading region keeps
+    * the panel's clearance inside its content; containers that pass the edge to a
+-   * child pass --lf-end-room as well, rather than shortening that child's frame. What
+-   * the page writes after `main`, such as a site footer, ends the page instead, so the
+-   * body keeps the foot's room for it (base.css). What takes no room in the flow doesn't
+-   * count: Leaf's hidden apparatus, and a dialog or popover, which stands in the top
+-   * layer when open. */
++   * child pass --lf-end-room as well, rather than shortening that child's frame. So the
++   * body keeps none of the foot's room (base.css), as a page of parts' body keeps none,
++   * and where the window holds the workspace the page doesn't scroll. Content the page
++   * writes after `main` keeps room of its own, and the render gate reports its words
++   * that the panel covers (`under-panel`). A workspace inside a `main` that carries no
++   * Layout stops short of the foot's room, so there the body keeps it.
++   * Rejected: the body keeping the room wherever `main` has a later sibling that takes
++   * room in the flow, asked of the sibling's tag and attributes. A browser extension
++   * adds elements of its own to the body, which no such list can name, and each would
++   * let the page scroll by the room. */
+   @media screen {
+-    html[data-lf-live][data-lf-layout~="workspace"]
+-      body:not(
+-        :has(
+-          > main
+-            ~ :not(
+-              [hidden],
+-              [data-lf-runtime],
+-              script,
+-              style,
+-              template,
+-              dialog,
+-              [popover]
+-            )
+-        )
+-      ),
++    html[data-lf-live][data-lf-layout~="workspace"] body:has(> main.layout-workspace),
+     html[data-lf-live][data-lf-layout~="workspace"] body > main.layout-workspace {
+       padding-block-end: 0;
+     }
+     html[data-lf-live][data-lf-layout~="workspace"]
+@@ -1023,9 +1014,9 @@ @layer lf-layouts {
+     }
+   }
+   @media screen and (min-width: 720px) and (min-height: 480px) {
+     html[data-lf-live][data-lf-layout~="workspace"] body > main.layout-workspace {
+-      block-size: calc(var(--lf-view-height) + var(--lf-foot-room));
++      block-size: calc(100dvh - var(--lf-head-room));
+     }
+     /* Held, each pane's own body scrolls up to the window's foot, so each pane keeps
+      * the room. */
+     html[data-lf-live][data-lf-layout~="workspace"]
+diff --git a/skills/leaf/references/page-authoring.md b/skills/leaf/references/page-authoring.md
+index b7e5c495c0..0d5925ad09 100644
+--- a/skills/leaf/references/page-authoring.md
++++ b/skills/leaf/references/page-authoring.md
+@@ -214,10 +214,12 @@ ## Style the page
+ revisions and checks cover it as they cover `main`. Only `main` takes the Layout, so
+ the page's CSS lays out what stands beside it (`page-layout.md`, "Layouts").
+ 
+ Leaf pads `body`'s foot by `--lf-foot-room` so the page's end scrolls clear of the
+-panel, and its head by `--lf-head-room`, the phone's status bar. Set the page's ground
+-in `--lf-paper`, which the theme paints the window in. A page that takes no theme
++panel, and its head by `--lf-head-room`, the phone's status bar. A workspace `main`
++keeps that foot room inside its own regions instead, so content after it adds
++`padding-bottom: var(--lf-foot-room)` of its own. Set the page's ground in
++`--lf-paper`, which the theme paints the window in. A page that takes no theme
+ paints its own ground on `html`, since `body` is a container, which keeps its own
+ background off the window below a short page. It also sets `--lf-paper` and
+ `--lf-ink` to its ground and text colours, so Leaf's panel, thread cards and
+ widgets stand on that ground rather than the browser's white. A reset
+diff --git a/tests/browser/widgets/test_workspaces_and_bounds.py b/tests/browser/widgets/test_workspaces_and_bounds.py
+index 2cdd57b65f..45355ccb80 100644
+--- a/tests/browser/widgets/test_workspaces_and_bounds.py
++++ b/tests/browser/widgets/test_workspaces_and_bounds.py
+@@ -271,10 +271,13 @@ def test_a_root_workspace_bounds_independent_regions_and_flows_when_it_cannot_fi
+ 
+ def test_a_workspace_reaches_the_window_foot_and_its_readers_clear_the_panel(
+     browser, serve
+ ):
++    """The workspace is the window, so the page has nothing to scroll, even where a
++    browser extension adds an element of its own to the body after `main`."""
+     page = open_page(browser, serve(WORKSPACE_PAGE))
+     resized(page, 1200, 900)
++    page.evaluate("document.body.append(document.createElement('extension-root'))")
+     geometry = page.evaluate(
+         """() => {
+           const main = document.querySelector('main');
+           const reader = document.querySelector('#queue > :not(header, footer)');
+@@ -305,10 +308,10 @@ def test_a_link_to_a_held_workspaces_region_leaves_the_page_where_it_stands(
+     browser, serve
+ ):
+     """A region reaching the window's foot keeps room there for the floating panel,
+     which holds none of its content, so the region shows whole where it stands. A link
+-    to it leaves the page still, though something after `main`, such as a browser
+-    extension's element, gives the page room to scroll its header away."""
++    to it leaves the page still, though something after `main`, such as a site footer,
++    gives the page room to scroll its header away."""
+     page = open_page(
+         browser,
+         serve(
+             leaf_page(

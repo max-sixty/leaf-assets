@@ -1,0 +1,28 @@
+2026-11-18T02:00:00.412Z INFO invoice_run run period=2026-11 due=3874
+2026-11-18T02:00:01.087Z INFO invoice_run sent invoice=inv_88001 customer=cus_1007 message=<a81f2c@mail.example.net>
+2026-11-18T02:00:01.104Z INFO invoice_run marked invoice=inv_88001 sent
+2026-11-18T02:00:01.790Z INFO invoice_run sent invoice=inv_88002 customer=cus_1013 message=<a81f31@mail.example.net>
+2026-11-18T02:00:01.806Z INFO invoice_run marked invoice=inv_88002 sent
+2026-11-18T02:14:52.330Z INFO month_end_rollup started period=2026-11 lock=invoices
+2026-11-18T02:14:53.118Z INFO invoice_run sent invoice=inv_88211 customer=cus_4817 message=<a83d02@mail.example.net>
+2026-11-18T02:14:58.124Z WARNING retry deliver failed (attempt 1 of 3): canceling statement due to lock timeout; retrying in 20s
+2026-11-18T02:15:18.902Z INFO invoice_run sent invoice=inv_88211 customer=cus_4817 message=<a83d19@mail.example.net>
+2026-11-18T02:15:23.907Z WARNING retry deliver failed (attempt 2 of 3): canceling statement due to lock timeout; retrying in 20s
+2026-11-18T02:15:44.611Z INFO invoice_run sent invoice=inv_88211 customer=cus_4817 message=<a83d2e@mail.example.net>
+2026-11-18T02:15:49.617Z ERROR invoice_run gave up on invoice=inv_88211
+Traceback (most recent call last):
+  File "billing/send_invoices.py", line 33, in deliver
+    conn.execute(
+billing.db.OperationalError: canceling statement due to lock timeout
+2026-11-18T02:15:50.240Z INFO invoice_run sent invoice=inv_88212 customer=cus_4819 message=<a83d33@mail.example.net>
+2026-11-18T02:15:55.246Z WARNING retry deliver failed (attempt 1 of 3): canceling statement due to lock timeout; retrying in 20s
+2026-11-18T02:16:15.981Z INFO invoice_run sent invoice=inv_88212 customer=cus_4819 message=<a83d47@mail.example.net>
+2026-11-18T02:16:16.002Z INFO invoice_run marked invoice=inv_88212 sent
+2026-11-18T02:16:16.655Z INFO invoice_run sent invoice=inv_88213 customer=cus_4821 message=<a83d4c@mail.example.net>
+2026-11-18T02:16:21.661Z WARNING retry deliver failed (attempt 1 of 3): canceling statement due to lock timeout; retrying in 20s
+2026-11-18T02:16:42.370Z INFO invoice_run sent invoice=inv_88213 customer=cus_4821 message=<a83d60@mail.example.net>
+2026-11-18T02:16:42.388Z INFO invoice_run marked invoice=inv_88213 sent
+2026-11-18T02:16:43.019Z INFO invoice_run sent invoice=inv_88214 customer=cus_4826 message=<a83d65@mail.example.net>
+2026-11-18T02:16:43.036Z INFO invoice_run marked invoice=inv_88214 sent
+2026-11-18T02:41:07.554Z INFO month_end_rollup finished period=2026-11 rows=3874
+2026-11-18T03:12:39.871Z INFO invoice_run run period=2026-11 done
