@@ -11,7 +11,7 @@
 2026-11-18T02:15:44.611Z INFO invoice_run sent invoice=inv_88211 customer=cus_4817 message=<a83d2e@mail.example.net>
 2026-11-18T02:15:49.617Z ERROR invoice_run gave up on invoice=inv_88211
 Traceback (most recent call last):
-  File "billing/send_invoices.py", line 33, in deliver
+  File "billing/send_invoices.py", line 31, in deliver
     conn.execute(
 billing.db.OperationalError: canceling statement due to lock timeout
 2026-11-18T02:15:50.240Z INFO invoice_run sent invoice=inv_88212 customer=cus_4819 message=<a83d33@mail.example.net>
